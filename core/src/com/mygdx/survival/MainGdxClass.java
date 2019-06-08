@@ -1,5 +1,8 @@
 package com.mygdx.survival;
 
+import box2dLight.ConeLight;
+import box2dLight.PointLight;
+import box2dLight.RayHandler;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.ai.pfa.Connection;
 import com.badlogic.gdx.ai.pfa.Graph;
@@ -11,17 +14,21 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.mygdx.lights.LightManagerSingleton;
 import com.mygdx.path.NodeGraph;
 import com.mygdx.path.WorldGraph;
 
@@ -38,6 +45,8 @@ public class MainGdxClass extends Game implements InputProcessor{
 	private MapRender renderMap;
 	private ShapeRenderer renderShape;
 
+
+
 	IndexedAStarPathFinder pathFinder;
 	private WorldGraph worldGraph;
 
@@ -48,6 +57,10 @@ public class MainGdxClass extends Game implements InputProcessor{
 
 	// wordCoordinates
 	private Vector3 worldCoordinates;
+	private ConeLight coneLight;
+	private float angleLight = 0f;
+	private World world;
+
 
 	@Override
 	public boolean keyDown(int keycode) {
@@ -118,6 +131,21 @@ public class MainGdxClass extends Game implements InputProcessor{
 		batch = new SpriteBatch();
 		Graphics.DisplayMode displayMode = Gdx.graphics.getDisplayMode();
 		Gdx.graphics.setFullscreenMode(displayMode);
+
+		// RayHandler
+		LightManagerSingleton.getInstance();
+
+		PolygonShape polygonShape = new PolygonShape();
+		polygonShape.setAsBox(8*32,1*32);
+		BodyDef bodyDef = new BodyDef();
+		bodyDef.position.set(232,488);
+		bodyDef.type = BodyDef.BodyType.StaticBody;
+
+		Body body = LightManagerSingleton.getInstance().world.createBody(bodyDef);
+		body.createFixture(polygonShape,1f);
+
+		LightManagerSingleton.getInstance().addConeLight(128,128,1024,33,33,new Color(0.5f,0.2f,0.6f,1f));
+
 
 		// initialisation camera
 		viewport = new ScreenViewport();
@@ -207,8 +235,17 @@ public class MainGdxClass extends Game implements InputProcessor{
 
 		renderShape.begin(ShapeRenderer.ShapeType.Line);
 		renderShape.setColor(Color.CYAN);
-		renderShape.rect(0,0,256,256);
+	//	renderShape.rect(0,0,256,256);
 		renderShape.end();
+
+		LightManagerSingleton.getInstance().rayHandler.setCombinedMatrix((OrthographicCamera) viewport.getCamera());
+		LightManagerSingleton.getInstance().rayHandler.updateAndRender();
+
+		//angleLight+=delta * 128f;
+		//coneLight.setDirection(angleLight);
+
+	//	float a = coneLight.getDirection();
+	//	coneLight.setDirection(a);
 
 	}
 	

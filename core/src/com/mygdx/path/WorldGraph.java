@@ -111,7 +111,7 @@ public class WorldGraph implements IndexedGraph<NodeGraph> {
         return nodePath;
     }
 
-    public static NodeGraph getNode(int x,int y){
+    public  NodeGraph getNode(int x,int y){
         if(x>-1 && x < width && y >-1 && y < height)
             return nodeGraphs[x][y];
         else

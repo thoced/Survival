@@ -56,7 +56,7 @@ public class OperatorPlayer extends BaseActor {
                 indRegion = 0;
         }
         else {
-            indRegion = 0;
+
             // on récupère une nouvelle action
             if(!queueAction.isEmpty()) {
 
@@ -77,6 +77,8 @@ public class OperatorPlayer extends BaseActor {
                 this.addAction(rotateToAction);
                 this.addAction(moveToAction);
             }
+            else
+                indRegion = 0;
         }
 
     // on vérifie si le player touche quelque chose
@@ -106,7 +108,7 @@ public class OperatorPlayer extends BaseActor {
         int nodeX = (int) (x /64);
         int nodeY = (int) (y /64);
 
-        NodeGraph goal = WorldGraph.getNode(nodeX,nodeY);
+        NodeGraph goal = WorldGraph.getInstance().getNode(nodeX,nodeY);
         if(goal == null)
             return;
 
@@ -114,7 +116,7 @@ public class OperatorPlayer extends BaseActor {
 
         int startX = (int) (this.getX() / 64);
         int startY = (int) (this.getY() / 64);
-        NodeGraph start = WorldGraph.getNode(startX,startY);
+        NodeGraph start = WorldGraph.getInstance().getNode(startX,startY);
         if(start == null)
             return;
 
@@ -123,6 +125,7 @@ public class OperatorPlayer extends BaseActor {
         System.out.println("paths: " + paths.getCount());
 
         this.clearActions();
+        queueAction.clear();
         // Creation du pool d'action
         for(int i=1;i<paths.getCount();i++){
             NodeGraph node = paths.get(i);
