@@ -1,0 +1,154 @@
+package com.mygdx.survival;
+
+import com.badlogic.gdx.ai.pfa.GraphPath;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Interpolation;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
+import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
+import com.badlogic.gdx.scenes.scene2d.actions.RotateToAction;
+import com.mygdx.path.NodeGraph;
+import com.mygdx.path.WorldGraph;
+
+import java.util.List;
+
+public class OperatorPlayer extends BaseActor {
+    private Sprite sprite;
+    private List<TextureRegion> regions;
+    private float indRegion = 0;
+    private float col;
+
+    public OperatorPlayer(Texture text, List<TextureRegion> regions, final String name){
+        this.setName(name);
+        sprite = new Sprite(text);
+        this.regions = regions;
+        sprite.setScale(0.5f);
+        this.setBounds(0,0,256,256);
+        sprite.setBounds(0,0,256,256);
+        this.setOrigin(128,128);
+        this.setTouchable(Touchable.enabled);
+
+
+    }
+
+    @Override
+    public void draw(Batch batch, float parentAlpha) {
+        super.draw(batch, parentAlpha);
+        sprite.setOrigin(this.getOriginX(),this.getOriginY());
+        sprite.setRegion(regions.get((int)indRegion));
+        sprite.draw(batch);
+
+    }
+
+    @Override
+    public void act(float delta) {
+        super.act(delta);
+        sprite.setPosition(getX() - getOriginX(),getY() - getOriginY());
+        sprite.setRotation(this.getRotation());
+
+        if(getActions().size > 0) {
+            indRegion += delta * 12;
+            if (indRegion > 11)
+                indRegion = 0;
+        }
+        else {
+            indRegion = 0;
+            // on récupère une nouvelle action
+            if(!queueAction.isEmpty()) {
+
+                MoveToAction moveToAction = queueAction.removeFirst();
+                Vector2 vSource = new Vector2(this.getX(),this.getY());
+                Vector2 vTarget = new Vector2(moveToAction.getX(),moveToAction.getY());
+                Vector2 diff = vTarget.sub(vSource);
+                float lenght = diff.len();
+                diff.nor();
+                float angle = diff.angle();
+
+                // création d'une action de rotation
+                RotateToAction rotateToAction = new RotateToAction();
+                rotateToAction.setRotation(angle);
+                rotateToAction.setDuration(0.25f);
+                rotateToAction.setUseShortestDirection(true);
+                // ajout des action
+                this.addAction(rotateToAction);
+                this.addAction(moveToAction);
+            }
+        }
+
+    // on vérifie si le player touche quelque chose
+        Actor actorHit = this.getStage().hit(this.getX(),this.getY(),true);
+        if(actorHit != null && actorHit.getName().equals("door")){
+            System.out.println("door hit !!!!");
+        }
+
+    }
+
+    @Override
+    public void setPosition(float x, float y) {
+        super.setPosition(x, y);
+        sprite.setPosition(x,y);
+
+    }
+
+    @Override
+    public void moveBy(float x, float y) {
+        super.moveBy(x, y);
+
+    }
+
+    public void setDestination(float x,float y){
+
+        // réception de la position de la nodeGoal
+        int nodeX = (int) (x /64);
+        int nodeY = (int) (y /64);
+
+        NodeGraph goal = WorldGraph.getNode(nodeX,nodeY);
+        if(goal == null)
+            return;
+
+        System.out.println("GOAL: " + goal.x + " : " + goal.y);
+
+        int startX = (int) (this.getX() / 64);
+        int startY = (int) (this.getY() / 64);
+        NodeGraph start = WorldGraph.getNode(startX,startY);
+        if(start == null)
+            return;
+
+        // lancement de la recherche
+        GraphPath<NodeGraph> paths = WorldGraph.getInstance().findPath(start,goal);
+        System.out.println("paths: " + paths.getCount());
+
+        this.clearActions();
+        // Creation du pool d'action
+        for(int i=1;i<paths.getCount();i++){
+            NodeGraph node = paths.get(i);
+            MoveToAction moveToAction = new MoveToAction();
+            moveToAction.setPosition((node.x * 64)+32,(node.y * 64) +32);
+            moveToAction.setDuration(0.25f);
+            moveToAction.setInterpolation(Interpolation.linear);
+            queueAction.addLast(moveToAction);
+        }
+
+
+
+
+
+       /* MoveToAction moveToAction = new MoveToAction();
+        moveToAction.setPosition(x,y);
+        moveToAction.setDuration(lenght / 256);
+        moveToAction.setInterpolation(Interpolation.smooth);
+        this.addAction(moveToAction);
+
+        RotateToAction rotateToAction = new RotateToAction();
+        rotateToAction.setRotation(angle);
+        rotateToAction.setDuration(0.25f);
+        rotateToAction.setUseShortestDirection(true);
+        this.addAction(rotateToAction);*/
+    }
+
+
+}
