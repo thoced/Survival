@@ -135,16 +135,16 @@ public class MainGdxClass extends Game implements InputProcessor{
 		// RayHandler
 		LightManagerSingleton.getInstance();
 
-		PolygonShape polygonShape = new PolygonShape();
+		/*PolygonShape polygonShape = new PolygonShape();
 		polygonShape.setAsBox(8*32,1*32);
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.position.set(232,488);
 		bodyDef.type = BodyDef.BodyType.StaticBody;
 
 		Body body = LightManagerSingleton.getInstance().world.createBody(bodyDef);
-		body.createFixture(polygonShape,1f);
+		body.createFixture(polygonShape,1f);*/
 
-		LightManagerSingleton.getInstance().addConeLight(128,128,1024,33,33,new Color(0.5f,0.2f,0.6f,1f));
+	//	LightManagerSingleton.getInstance().addConeLight(128,128,2048,33,15,new Color(0.5f,0.2f,0.6f,1f));
 
 
 		// initialisation camera
@@ -201,12 +201,14 @@ public class MainGdxClass extends Game implements InputProcessor{
 			for (int x = 0; x < mapWidth; x++) {
 				boolean obstacle = false;
 				if(layer.getCell(x,y).getTile().getProperties().containsKey("obstacle") && ((Boolean)layer.getCell(x,y).getTile().getProperties().get("obstacle")) == true){
+					LightManagerSingleton.getInstance().addWalk(x,y);
 					continue;
 				}
 				else {
 					obstacle = false;
 					NodeGraph nodeGraph = new NodeGraph(x,y,obstacle);
 					worldGraph.addNodeGraph(nodeGraph);
+
 				}
 			}
 		}

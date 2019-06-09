@@ -1,6 +1,8 @@
 package com.mygdx.survival;
 
+import box2dLight.ConeLight;
 import com.badlogic.gdx.ai.pfa.GraphPath;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -11,15 +13,16 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.badlogic.gdx.scenes.scene2d.actions.RotateToAction;
+import com.mygdx.lights.LightManagerSingleton;
 import com.mygdx.path.NodeGraph;
 import com.mygdx.path.WorldGraph;
 
 import java.util.List;
 
 public class OperatorPlayer extends BaseActor {
-    private Sprite sprite;
-    private List<TextureRegion> regions;
-    private float indRegion = 0;
+    private final ConeLight coneLight;
+    private final ConeLight coneLightPeripherique;
+
     private float col;
 
     public OperatorPlayer(Texture text, List<TextureRegion> regions, final String name){
@@ -32,6 +35,8 @@ public class OperatorPlayer extends BaseActor {
         this.setOrigin(128,128);
         this.setTouchable(Touchable.enabled);
 
+         coneLight = LightManagerSingleton.getInstance().addConeLight(0,0,788,25f,0f,new Color(0.7f,0.6f,0.6f,0.8f));
+         coneLightPeripherique = LightManagerSingleton.getInstance().addConeLight(0,0,512,60f,0f, new Color(0.2f,0.1f,0.1f,1f));
 
     }
 
@@ -68,6 +73,7 @@ public class OperatorPlayer extends BaseActor {
                 diff.nor();
                 float angle = diff.angle();
 
+
                 // création d'une action de rotation
                 RotateToAction rotateToAction = new RotateToAction();
                 rotateToAction.setRotation(angle);
@@ -86,6 +92,13 @@ public class OperatorPlayer extends BaseActor {
         if(actorHit != null && actorHit.getName().equals("door")){
             System.out.println("door hit !!!!");
         }
+
+        // updateLight
+        coneLight.setPosition(this.getX(),this.getY());
+        coneLight.setDirection(sprite.getRotation());
+        coneLightPeripherique.setPosition(coneLight.getPosition());
+        coneLightPeripherique.setDirection(sprite.getRotation());
+
 
     }
 
