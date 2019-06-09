@@ -1,6 +1,8 @@
 package com.mygdx.survival;
 
 import box2dLight.ConeLight;
+import box2dLight.Light;
+import box2dLight.PointLight;
 import com.badlogic.gdx.ai.pfa.GraphPath;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -22,6 +24,8 @@ import java.util.List;
 public class OperatorPlayer extends BaseActor {
     private final ConeLight coneLight;
     private final ConeLight coneLightPeripherique;
+    private final PointLight haloLight;
+
 
     private float col;
 
@@ -36,8 +40,8 @@ public class OperatorPlayer extends BaseActor {
         this.setTouchable(Touchable.enabled);
 
          coneLight = LightManagerSingleton.getInstance().addConeLight(0,0,788,25f,0f,new Color(0.7f,0.6f,0.6f,0.8f));
-         coneLightPeripherique = LightManagerSingleton.getInstance().addConeLight(0,0,512,60f,0f, new Color(0.2f,0.1f,0.1f,1f));
-
+         coneLightPeripherique = LightManagerSingleton.getInstance().addConeLight(0,0,512,60f,0f, new Color(0.1f,0.1f,0.1f,1f));
+         haloLight = LightManagerSingleton.getInstance().addPointLight(0,0,256,new Color(0.1f,0.1f,0.1f,1f));
     }
 
     @Override
@@ -73,7 +77,6 @@ public class OperatorPlayer extends BaseActor {
                 diff.nor();
                 float angle = diff.angle();
 
-
                 // création d'une action de rotation
                 RotateToAction rotateToAction = new RotateToAction();
                 rotateToAction.setRotation(angle);
@@ -96,8 +99,9 @@ public class OperatorPlayer extends BaseActor {
         // updateLight
         coneLight.setPosition(this.getX(),this.getY());
         coneLight.setDirection(sprite.getRotation());
-        coneLightPeripherique.setPosition(coneLight.getPosition());
+       coneLightPeripherique.setPosition(coneLight.getPosition());
         coneLightPeripherique.setDirection(sprite.getRotation());
+        haloLight.setPosition(coneLight.getPosition());
 
 
     }
@@ -149,21 +153,6 @@ public class OperatorPlayer extends BaseActor {
             queueAction.addLast(moveToAction);
         }
 
-
-
-
-
-       /* MoveToAction moveToAction = new MoveToAction();
-        moveToAction.setPosition(x,y);
-        moveToAction.setDuration(lenght / 256);
-        moveToAction.setInterpolation(Interpolation.smooth);
-        this.addAction(moveToAction);
-
-        RotateToAction rotateToAction = new RotateToAction();
-        rotateToAction.setRotation(angle);
-        rotateToAction.setDuration(0.25f);
-        rotateToAction.setUseShortestDirection(true);
-        this.addAction(rotateToAction);*/
     }
 
 

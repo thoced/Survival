@@ -11,6 +11,8 @@ import com.badlogic.gdx.ai.utils.Ray;
 import com.badlogic.gdx.ai.utils.RaycastCollisionDetector;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.collision.BoundingBox;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 
@@ -39,6 +41,7 @@ public class WorldGraph implements IndexedGraph<NodeGraph> {
     private WorldGraph() {
 
     }
+
 
     public void prepareWorldGraph(int width,int height){
         this.width = width;

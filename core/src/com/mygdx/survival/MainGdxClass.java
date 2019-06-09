@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
@@ -31,6 +32,8 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.lights.LightManagerSingleton;
 import com.mygdx.path.NodeGraph;
 import com.mygdx.path.WorldGraph;
+import com.mygdx.physics.WorldManager;
+import com.mygdx.stages.EntityStage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +46,8 @@ public class MainGdxClass extends Game implements InputProcessor{
 	private ScreenViewport viewport;
 	private TmxMapLoader tmxMapLoader;
 	private MapRender renderMap;
-	private ShapeRenderer renderShape;
+	Box2DDebugRenderer debugRenderer;
+
 
 
 
@@ -51,15 +55,15 @@ public class MainGdxClass extends Game implements InputProcessor{
 	private WorldGraph worldGraph;
 
 	// opérator
-	OperatorPlayer player;
+	OperatorFree player;
 	// Stage
-	Stage entityStage;
+	EntityStage entityStage;
 
 	// wordCoordinates
 	private Vector3 worldCoordinates;
 	private ConeLight coneLight;
 	private float angleLight = 0f;
-	private World world;
+	private ShapeRenderer renderShape;
 
 
 	@Override
@@ -113,6 +117,9 @@ public class MainGdxClass extends Game implements InputProcessor{
 		}else if(screenY < 16)
 			camerascrool = CAMERASCROLL.DOWN;
 
+		// calcul de l'angle de direction de vue
+		Vector3 viewDirection  = viewport.getCamera().unproject(new Vector3(screenX,screenY,0));
+		player.setViewDirection(viewDirection.x,viewDirection.y);
 
 		return true;
 	}
@@ -133,6 +140,8 @@ public class MainGdxClass extends Game implements InputProcessor{
 		Gdx.graphics.setFullscreenMode(displayMode);
 
 		// RayHandler
+		Box2D.init();
+		WorldManager.getInstance();
 		LightManagerSingleton.getInstance();
 
 		/*PolygonShape polygonShape = new PolygonShape();
@@ -171,14 +180,18 @@ public class MainGdxClass extends Game implements InputProcessor{
 		GraphPath<NodeGraph> paths = worldGraph.findPath(start,goal);
 
 		// Stage
-		entityStage = new Stage();
+		entityStage = new EntityStage();
 		entityStage.setViewport(viewport);
 
 		// opérator
 		Texture textureOperator =  new Texture("textures/operator_atlas.png");
 		List<TextureRegion> listsRegion = BaseActor.prepareRegion(textureOperator,256,256);
-		player = new OperatorPlayer(textureOperator,listsRegion,"player");
+		player = new OperatorFree(textureOperator,listsRegion,"player");
 		entityStage.addActor(player);
+
+		debugRenderer = new Box2DDebugRenderer();
+
+		LightManagerSingleton.getInstance().addPointLight(1024,1024,512,new Color(0.95f,0.1f,0.95f,0.9f));
 
 	}
 
@@ -201,7 +214,7 @@ public class MainGdxClass extends Game implements InputProcessor{
 			for (int x = 0; x < mapWidth; x++) {
 				boolean obstacle = false;
 				if(layer.getCell(x,y).getTile().getProperties().containsKey("obstacle") && ((Boolean)layer.getCell(x,y).getTile().getProperties().get("obstacle")) == true){
-					LightManagerSingleton.getInstance().addWalk(x,y);
+					WorldManager.getInstance().addWalk(x,y);
 					continue;
 				}
 				else {
@@ -227,27 +240,33 @@ public class MainGdxClass extends Game implements InputProcessor{
 		// update
 		cameraUpdate(delta);
 		entityStage.act(delta);
+		WorldManager.getInstance().world.step(delta,6,2);
 
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		renderMap.setView((OrthographicCamera) viewport.getCamera());
 		renderMap.render();
 		// affichage stage
+		entityStage.setViewport(viewport);
 		entityStage.draw();
 		// shape
 
 		renderShape.begin(ShapeRenderer.ShapeType.Line);
 		renderShape.setColor(Color.CYAN);
-	//	renderShape.rect(0,0,256,256);
+		//renderShape.rect(0,0,256,256);
 		renderShape.end();
 
 		LightManagerSingleton.getInstance().rayHandler.setCombinedMatrix((OrthographicCamera) viewport.getCamera());
 		LightManagerSingleton.getInstance().rayHandler.updateAndRender();
+
+		//debugRenderer.render(WorldManager.getInstance().world,viewport.getCamera().combined);
 
 		//angleLight+=delta * 128f;
 		//coneLight.setDirection(angleLight);
 
 	//	float a = coneLight.getDirection();
 	//	coneLight.setDirection(a);
+
+
 
 	}
 	
