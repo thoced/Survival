@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveByAction;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
@@ -32,6 +33,8 @@ public class OperatorFree extends OperatorPlayer {
     private ShapeRenderer shapeRenderer = new ShapeRenderer();
     private MoveByAction moveToAction;
 
+
+
     public OperatorFree(Texture text, List<TextureRegion> regions, String name) {
         super(text, regions, name);
         destination = new Vector2(this.getX(),this.getY());
@@ -39,6 +42,8 @@ public class OperatorFree extends OperatorPlayer {
         shapeRenderer.setAutoShapeType(true);
         // creation de la physique
         body = WorldManager.getInstance().createPlayerBody(this);
+
+
     }
 
 
@@ -145,7 +150,6 @@ public class OperatorFree extends OperatorPlayer {
         sprite.setOrigin(this.getOriginX(),this.getOriginY());
         sprite.setRegion(regions.get((int)indRegion));
         sprite.draw(batch);
-
 
 
        /* shapeRenderer.setProjectionMatrix(this.getStage().getCamera().combined);

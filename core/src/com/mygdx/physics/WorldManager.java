@@ -46,6 +46,7 @@ public class WorldManager implements ContactListener{
     public Body createPlayerBody(Actor player){
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.DynamicBody;
+        bodyDef.linearVelocity.set(0,0);
 
         CircleShape circleShape = new CircleShape();
         circleShape.setRadius(24f);

@@ -29,7 +29,7 @@ public class LightManagerSingleton {
         rayHandler.setShadows(true);
         rayHandler.setBlur(true);
         rayHandler.setBlurNum(4);
-        rayHandler.setAmbientLight(0.035f);
+        rayHandler.setAmbientLight(0.005f);
     }
 
     public ConeLight addConeLight(int x, int y, int distance,float coneDegre, float coneDirection, Color color){

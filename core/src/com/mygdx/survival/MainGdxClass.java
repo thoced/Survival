@@ -34,6 +34,7 @@ import com.mygdx.path.NodeGraph;
 import com.mygdx.path.WorldGraph;
 import com.mygdx.physics.WorldManager;
 import com.mygdx.stages.EntityStage;
+import javafx.scene.Cursor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -139,6 +140,8 @@ public class MainGdxClass extends Game implements InputProcessor{
 		Graphics.DisplayMode displayMode = Gdx.graphics.getDisplayMode();
 		Gdx.graphics.setFullscreenMode(displayMode);
 
+
+
 		// RayHandler
 		Box2D.init();
 		WorldManager.getInstance();
@@ -191,7 +194,7 @@ public class MainGdxClass extends Game implements InputProcessor{
 
 		debugRenderer = new Box2DDebugRenderer();
 
-		LightManagerSingleton.getInstance().addPointLight(1024,1024,512,new Color(0.95f,0.1f,0.95f,0.9f));
+
 
 	}
 

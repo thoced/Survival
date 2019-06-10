@@ -16,6 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.badlogic.gdx.scenes.scene2d.actions.RotateToAction;
 import com.mygdx.lights.LightManagerSingleton;
+import com.mygdx.lights.SpotLight;
 import com.mygdx.path.NodeGraph;
 import com.mygdx.path.WorldGraph;
 
@@ -42,6 +43,8 @@ public class OperatorPlayer extends BaseActor {
          coneLight = LightManagerSingleton.getInstance().addConeLight(0,0,788,25f,0f,new Color(0.7f,0.6f,0.6f,0.8f));
          coneLightPeripherique = LightManagerSingleton.getInstance().addConeLight(0,0,512,60f,0f, new Color(0.1f,0.1f,0.1f,1f));
          haloLight = LightManagerSingleton.getInstance().addPointLight(0,0,256,new Color(0.1f,0.1f,0.1f,1f));
+
+
     }
 
     @Override
@@ -99,7 +102,7 @@ public class OperatorPlayer extends BaseActor {
         // updateLight
         coneLight.setPosition(this.getX(),this.getY());
         coneLight.setDirection(sprite.getRotation());
-       coneLightPeripherique.setPosition(coneLight.getPosition());
+        coneLightPeripherique.setPosition(coneLight.getPosition());
         coneLightPeripherique.setDirection(sprite.getRotation());
         haloLight.setPosition(coneLight.getPosition());
 
