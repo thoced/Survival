@@ -49,9 +49,6 @@ public class MainGdxClass extends Game implements InputProcessor{
 	private MapRender renderMap;
 	Box2DDebugRenderer debugRenderer;
 
-
-
-
 	IndexedAStarPathFinder pathFinder;
 	private WorldGraph worldGraph;
 
@@ -205,6 +202,10 @@ public class MainGdxClass extends Game implements InputProcessor{
 		TiledMapTileLayer layer = (TiledMapTileLayer) tiledMap.getLayers().get(0);
 		renderMap = new MapRender(tiledMap,batch);
 
+		for(int i=0;i<tiledMap.getLayers().size();i++){
+			System.out.println(tiledMap.getLayers().get(i).getName());
+		}
+
 		// creation du PathFinding
 		// Création du monde
 		int mapWidth  = layer.getWidth();
@@ -232,6 +233,8 @@ public class MainGdxClass extends Game implements InputProcessor{
 		// création des connections
 		worldGraph.connectNodes();
 
+		// génération des lumière
+		LightManagerSingleton.getInstance().loadLightsLayer(tiledMap.getLayers().get("lights"));
 
 	}
 
