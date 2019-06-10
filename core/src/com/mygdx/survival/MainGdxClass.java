@@ -168,8 +168,12 @@ public class MainGdxClass extends Game implements InputProcessor{
 		renderShape.setAutoShapeType(true);
 		renderShape.setProjectionMatrix(viewport.getCamera().combined);
 
+		// Stage
+		entityStage = new EntityStage();
+		entityStage.setViewport(viewport);
+
 		// chargement d'une map
-		loadTiledMap();
+		loadTiledMap(entityStage);
 		// input Processor
 		Gdx.input.setInputProcessor(this);
 
@@ -178,10 +182,6 @@ public class MainGdxClass extends Game implements InputProcessor{
 		NodeGraph goal = worldGraph.getNode(50,50);
 
 		GraphPath<NodeGraph> paths = worldGraph.findPath(start,goal);
-
-		// Stage
-		entityStage = new EntityStage();
-		entityStage.setViewport(viewport);
 
 		// opérator
 		Texture textureOperator =  new Texture("textures/operator_atlas.png");
@@ -196,7 +196,7 @@ public class MainGdxClass extends Game implements InputProcessor{
 	}
 
 
-	private void loadTiledMap() {
+	private void loadTiledMap(Stage stage) {
 		tmxMapLoader = new TmxMapLoader();
 		TiledMap tiledMap = tmxMapLoader.load("maps/map01.tmx");
 		TiledMapTileLayer layer = (TiledMapTileLayer) tiledMap.getLayers().get(0);
@@ -234,7 +234,7 @@ public class MainGdxClass extends Game implements InputProcessor{
 		worldGraph.connectNodes();
 
 		// génération des lumière
-		LightManagerSingleton.getInstance().loadLightsLayer(tiledMap.getLayers().get("lights"));
+		LightManagerSingleton.getInstance().loadLightsLayer(tiledMap.getLayers().get("lights"),stage);
 
 	}
 

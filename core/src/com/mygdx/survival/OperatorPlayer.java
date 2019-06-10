@@ -1,7 +1,6 @@
 package com.mygdx.survival;
 
 import box2dLight.ConeLight;
-import box2dLight.Light;
 import box2dLight.PointLight;
 import com.badlogic.gdx.ai.pfa.GraphPath;
 import com.badlogic.gdx.graphics.Color;
@@ -16,7 +15,6 @@ import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.badlogic.gdx.scenes.scene2d.actions.RotateToAction;
 import com.mygdx.lights.LightManagerSingleton;
-import com.mygdx.lights.SpotLight;
 import com.mygdx.path.NodeGraph;
 import com.mygdx.path.WorldGraph;
 
@@ -40,9 +38,9 @@ public class OperatorPlayer extends BaseActor {
         this.setOrigin(128,128);
         this.setTouchable(Touchable.enabled);
 
-         coneLight = LightManagerSingleton.getInstance().addConeLight(0,0,788,25f,0f,new Color(0.7f,0.6f,0.6f,0.8f));
-         coneLightPeripherique = LightManagerSingleton.getInstance().addConeLight(0,0,512,60f,0f, new Color(0.1f,0.1f,0.1f,1f));
-         haloLight = LightManagerSingleton.getInstance().addPointLight(0,0,256,new Color(0.1f,0.1f,0.1f,1f));
+         coneLight = LightManagerSingleton.getInstance().addNativeConeLight(0,0,788,25f,0f,new Color(0.7f,0.6f,0.6f,0.8f));
+         coneLightPeripherique = LightManagerSingleton.getInstance().addNativeConeLight(0,0,512,60f,0f, new Color(0.1f,0.1f,0.1f,1f));
+         haloLight = LightManagerSingleton.getInstance().addNativePointLight(0,0,256,new Color(0.1f,0.1f,0.1f,1f));
 
 
     }
