@@ -29,12 +29,14 @@ public class FlashLight extends Actor  {
         if(deltaTime > 1f){
             deltaTime = 0f;
             state = !state;
+
+            if(state){
+                pointLight.setDistance(0);
+            }else
+                pointLight.setDistance(this.distance);
+
         }
 
-        if(state){
-            pointLight.setDistance(0);
-        }else
-            pointLight.setDistance(this.distance);
 
 
 
