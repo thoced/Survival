@@ -138,8 +138,9 @@ public class OperatorFree extends OperatorPlayer {
         //super.moveBy(x, y);
         body.setLinearVelocity(x*128,y*128);
 
-
     }
+
+
 
     @Override
     public void draw(Batch batch, float parentAlpha) {

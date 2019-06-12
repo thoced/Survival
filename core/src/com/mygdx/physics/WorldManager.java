@@ -3,6 +3,7 @@ package com.mygdx.physics;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.mygdx.enemies.MonsterBase;
 
 public class WorldManager implements ContactListener{
     private static WorldManager ourInstance = new WorldManager();
@@ -31,15 +32,18 @@ public class WorldManager implements ContactListener{
 
 
 
-       /* FixtureDef fixtureDef = new FixtureDef();
+
+        FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.isSensor = true;
         fixtureDef.filter.categoryBits = obstacle;
         fixtureDef.density = 1f;
-        fixtureDef.friction = 1f;
-        fixtureDef.shape = polygonShape;*/
+        fixtureDef.friction = 0.1f;
+        fixtureDef.shape = polygonShape;
+
 
 
         Body body = world.createBody(bodyDef);
+        body.createFixture(fixtureDef);
         body.createFixture(polygonShape,1f);
     }
 
@@ -64,6 +68,38 @@ public class WorldManager implements ContactListener{
         saveBody.setUserData(player);
         return saveBody;
 
+    }
+
+    public Body createMonsterBody(MonsterBase monster){
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.type = BodyDef.BodyType.DynamicBody;
+        bodyDef.linearVelocity.set(0,0);
+        bodyDef.angularVelocity = 1f;
+        bodyDef.angularDamping = 0f;
+        bodyDef.fixedRotation = true;
+
+
+        CircleShape circleShape = new CircleShape();
+        circleShape.setRadius(18f);
+        circleShape.setPosition(new Vector2(monster.getX(),monster.getY()));
+        FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.isSensor = false;
+        fixtureDef.filter.categoryBits = obstacle;
+        fixtureDef.density = 1f;
+        fixtureDef.friction = 0.1f;
+        fixtureDef.restitution = 1f;
+        fixtureDef.shape = circleShape;
+
+        saveBody = world.createBody(bodyDef);
+        MassData massData = new MassData();
+        massData.mass = monster.getMass();
+        saveBody.setMassData(massData);
+        saveBody.setAngularDamping(100f);
+        saveBody.setLinearDamping(100f);
+        saveBody.createFixture(fixtureDef);
+        saveBody.setUserData(monster);
+
+        return saveBody;
     }
 
     @Override

@@ -1,43 +1,33 @@
 package com.mygdx.survival;
 
 import box2dLight.ConeLight;
-import box2dLight.PointLight;
-import box2dLight.RayHandler;
 import com.badlogic.gdx.*;
-import com.badlogic.gdx.ai.pfa.Connection;
-import com.badlogic.gdx.ai.pfa.Graph;
 import com.badlogic.gdx.ai.pfa.GraphPath;
 import com.badlogic.gdx.ai.pfa.indexed.IndexedAStarPathFinder;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
+import com.mygdx.enemies.EnemyStage;
+import com.mygdx.enemies.Monster;
 import com.mygdx.lights.LightManagerSingleton;
 import com.mygdx.path.NodeGraph;
 import com.mygdx.path.WorldGraph;
 import com.mygdx.physics.WorldManager;
 import com.mygdx.stages.EntityStage;
-import javafx.scene.Cursor;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class MainGdxClass extends Game implements InputProcessor{
 	SpriteBatch batch;
@@ -56,6 +46,7 @@ public class MainGdxClass extends Game implements InputProcessor{
 	OperatorFree player;
 	// Stage
 	EntityStage entityStage;
+	EnemyStage	enemyStage;
 
 	// wordCoordinates
 	private Vector3 worldCoordinates;
@@ -171,6 +162,9 @@ public class MainGdxClass extends Game implements InputProcessor{
 		// Stage
 		entityStage = new EntityStage();
 		entityStage.setViewport(viewport);
+		// Stage ennemies
+		enemyStage = EnemyStage.getInstance();
+		enemyStage.setViewport(viewport);
 
 		// chargement d'une map
 		loadTiledMap(entityStage);
@@ -189,9 +183,31 @@ public class MainGdxClass extends Game implements InputProcessor{
 		player = new OperatorFree(textureOperator,listsRegion,"player");
 		entityStage.addActor(player);
 
+		PlayerSingleton.getInstance().player = player;
+
 		debugRenderer = new Box2DDebugRenderer();
 
+		// test load enemies
+		this.testLoadEnemies();
 
+
+	}
+
+	public void testLoadEnemies(){
+
+		Texture texture = new Texture("textures/operator_atlas.png");
+		List<TextureRegion> listsRegion = BaseActor.prepareRegion(texture,256,256);
+
+		for(int i=0;i<8;i++) {
+			Random random = new Random();
+			int massAdd = random.nextInt(10);
+			int speedAdd = random.nextInt(8);
+
+			Monster monster = new Monster(texture, listsRegion, "monster",75 + massAdd);
+			monster.setPosition(128 + (i * 64), 768);
+			enemyStage.addActor(monster);
+			monster.setDestination(player.getX(), player.getY());
+		}
 
 	}
 
@@ -246,6 +262,7 @@ public class MainGdxClass extends Game implements InputProcessor{
 		// update
 		cameraUpdate(delta);
 		entityStage.act(delta);
+		enemyStage.act(delta);
 		WorldManager.getInstance().world.step(delta,6,2);
 
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -254,6 +271,8 @@ public class MainGdxClass extends Game implements InputProcessor{
 		// affichage stage
 		entityStage.setViewport(viewport);
 		entityStage.draw();
+		enemyStage.setViewport(viewport);
+		enemyStage.draw();
 		// shape
 
 		renderShape.begin(ShapeRenderer.ShapeType.Line);
@@ -264,7 +283,7 @@ public class MainGdxClass extends Game implements InputProcessor{
 		LightManagerSingleton.getInstance().rayHandler.setCombinedMatrix((OrthographicCamera) viewport.getCamera());
 		LightManagerSingleton.getInstance().rayHandler.updateAndRender();
 
-		//debugRenderer.render(WorldManager.getInstance().world,viewport.getCamera().combined);
+		debugRenderer.render(WorldManager.getInstance().world,viewport.getCamera().combined);
 
 		//angleLight+=delta * 128f;
 		//coneLight.setDirection(angleLight);

@@ -69,6 +69,12 @@ public class WorldGraph implements IndexedGraph<NodeGraph> {
                     addNodeNeighbour(nodeGraphs[x][y], x + 1, y); // Node to right
                     addNodeNeighbour(nodeGraphs[x][y], x, y - 1); // Node below
                     addNodeNeighbour(nodeGraphs[x][y], x, y + 1); // Node above
+
+                    addNodeNeighbour(nodeGraphs[x][y], x-1, y + 1); // haut gauche
+                    addNodeNeighbour(nodeGraphs[x][y], x+1, y + 1); // haut droite
+                    addNodeNeighbour(nodeGraphs[x][y], x-1, y - 1); // bas gauche
+                    addNodeNeighbour(nodeGraphs[x][y], x+1, y - 1); // bas gauche
+
                 }
             }
         }
