@@ -126,7 +126,7 @@ public class MainGdxClass extends Game implements InputProcessor{
 	public void create () {
 		batch = new SpriteBatch();
 		Graphics.DisplayMode displayMode = Gdx.graphics.getDisplayMode();
-		Gdx.graphics.setFullscreenMode(displayMode);
+	//	Gdx.graphics.setFullscreenMode(displayMode);
 
 
 
@@ -198,7 +198,7 @@ public class MainGdxClass extends Game implements InputProcessor{
 		Texture texture = new Texture("textures/operator_atlas.png");
 		List<TextureRegion> listsRegion = BaseActor.prepareRegion(texture,256,256);
 
-		for(int i=0;i<8;i++) {
+		for(int i=0;i<16;i++) {
 			Random random = new Random();
 			int massAdd = random.nextInt(10);
 			int speedAdd = random.nextInt(8);
@@ -206,7 +206,7 @@ public class MainGdxClass extends Game implements InputProcessor{
 			Monster monster = new Monster(texture, listsRegion, "monster",75 + massAdd);
 			monster.setPosition(128 + (i * 64), 768);
 			enemyStage.addActor(monster);
-			monster.setDestination(player.getX(), player.getY());
+			monster.setDestination(3122,2048);
 		}
 
 	}

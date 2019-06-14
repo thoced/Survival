@@ -59,7 +59,7 @@ public class Monster extends MonsterBase {
             if(!queueAction.isEmpty() && !onAction){
                 onAction = true;
                 moveToAction = queueAction.removeFirst();
-               // timeOut = 0f;
+                timeOut = 0f;
             }
 
             if(moveToAction != null) {
@@ -73,10 +73,12 @@ public class Monster extends MonsterBase {
             }
 
             // timeout pour éviter les blocages, relance une recherche de chemin
-            if(timeOut > 6f){
-                prepareDestination(PlayerSingleton.getInstance().player.getX(),PlayerSingleton.getInstance().player.getY());
+            if(timeOut > 2f){
+                moveToAction.pos.set(body.getPosition().x,body.getPosition().y);
                 timeOut = 0f;
             }
+
+
 
 
 
@@ -129,13 +131,13 @@ public class Monster extends MonsterBase {
 
         Random rx = new Random();
         Random ry = new Random();
-        double rangeMin = -20f;
-        double rangeMax = 20f;
+        double rangeMin = -16f;
+        double rangeMax = 16f;
 
         for(int i=1;i<paths.getCount();i++){
             float deltaX = (float) (rangeMin + (rangeMax - rangeMin) * rx.nextDouble());
             float deltaY = (float) (rangeMin + (rangeMax - rangeMin) * ry.nextDouble());
-            float deltaSpeed = rx.nextInt(16);
+            float deltaSpeed = 0f;//rx.nextInt(16);
             ActionMonster action = new ActionMonster(new Vector2((paths.get(i).x * 64) + 32 + deltaX,(paths.get(i).y * 64) + 32 + deltaY),deltaSpeed);
             queueAction.addLast(action);
 
@@ -156,5 +158,9 @@ public class Monster extends MonsterBase {
 
 
 
+    }
+
+    public ActionMonster getMoveToAction() {
+        return moveToAction;
     }
 }

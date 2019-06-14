@@ -3,6 +3,7 @@ package com.mygdx.physics;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.mygdx.enemies.Monster;
 import com.mygdx.enemies.MonsterBase;
 
 public class WorldManager implements ContactListener{
@@ -25,19 +26,32 @@ public class WorldManager implements ContactListener{
 
     public void addWalk(int x, int y){
         PolygonShape polygonShape = new PolygonShape();
-        polygonShape.setAsBox(32,32);
+
+        Vector2[] vertices = new Vector2[8];
+        vertices[0] = new Vector2(-32,18);
+        vertices[1] = new Vector2(-18,32);
+        vertices[2] = new Vector2(18,32);
+        vertices[3] = new Vector2(32,18);
+
+        vertices[4] = new Vector2(32,-18);
+        vertices[5] = new Vector2(18,-32);
+        vertices[6] = new Vector2(-18,-32);
+        vertices[7] = new Vector2(-32,-18);
+
+        polygonShape.set(vertices);
+
+
+        //polygonShape.setRadius(32f);
         BodyDef bodyDef = new BodyDef();
         bodyDef.position.set((x*64)+32,(y*64)+32);
         bodyDef.type = BodyDef.BodyType.StaticBody;
 
 
-
-
         FixtureDef fixtureDef = new FixtureDef();
-        fixtureDef.isSensor = true;
+        fixtureDef.isSensor = false;
         fixtureDef.filter.categoryBits = obstacle;
         fixtureDef.density = 1f;
-        fixtureDef.friction = 0.1f;
+        fixtureDef.friction = 0.0f;
         fixtureDef.shape = polygonShape;
 
 
@@ -85,7 +99,7 @@ public class WorldManager implements ContactListener{
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.isSensor = false;
         fixtureDef.filter.categoryBits = obstacle;
-        fixtureDef.density = 1f;
+        fixtureDef.density = 0.7f;
         fixtureDef.friction = 0.1f;
         fixtureDef.restitution = 1f;
         fixtureDef.shape = circleShape;
@@ -104,12 +118,9 @@ public class WorldManager implements ContactListener{
 
     @Override
     public void beginContact(Contact contact) {
-        if(contact.getFixtureA().getBody() == saveBody || contact.getFixtureB().getBody() == saveBody){
-            System.out.println("Contact Body !!!!!!!!!!!!!!!!");
 
+        
 
-
-        }
     }
 
     @Override

@@ -22,9 +22,11 @@ public class NodeGraph{
 
     public void addNeighbour(NodeGraph aNode) {
         if (null != aNode) {
-            mConnections.add(new DefaultConnection<NodeGraph>(this, aNode));
+            mConnections.add(new NodeConnection(this, aNode));
         }
     }
+
+
 
     @Override
     public boolean equals(Object obj) {

@@ -8,4 +8,6 @@ public class WorldHeuristic implements Heuristic<NodeGraph> {
     public float estimate(NodeGraph currentNode, NodeGraph goalNode) {
         return Vector2.dst(currentNode.x, currentNode.y, goalNode.x, goalNode.y);
     }
+
+
 }
