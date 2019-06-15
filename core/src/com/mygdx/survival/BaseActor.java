@@ -19,7 +19,7 @@ public class BaseActor extends Actor {
 
     public static  List<TextureRegion> prepareRegion(Texture text,int width,int height) {
         List<TextureRegion> regions = new ArrayList<TextureRegion>();
-        for(int i=0;i<12;i++) {
+        for(int i=0;i<text.getWidth() / width;i++) {
             TextureRegion region = new TextureRegion(text, i*width, 0, width, height);
             regions.add(region);
         }

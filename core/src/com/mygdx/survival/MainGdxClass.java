@@ -126,7 +126,7 @@ public class MainGdxClass extends Game implements InputProcessor{
 	public void create () {
 		batch = new SpriteBatch();
 		Graphics.DisplayMode displayMode = Gdx.graphics.getDisplayMode();
-	//	Gdx.graphics.setFullscreenMode(displayMode);
+		Gdx.graphics.setFullscreenMode(displayMode);
 
 
 
@@ -181,6 +181,7 @@ public class MainGdxClass extends Game implements InputProcessor{
 		Texture textureOperator =  new Texture("textures/operator_atlas.png");
 		List<TextureRegion> listsRegion = BaseActor.prepareRegion(textureOperator,256,256);
 		player = new OperatorFree(textureOperator,listsRegion,"player");
+		player.setPosition(512,128);
 		entityStage.addActor(player);
 
 		PlayerSingleton.getInstance().player = player;
@@ -190,23 +191,25 @@ public class MainGdxClass extends Game implements InputProcessor{
 		// test load enemies
 		this.testLoadEnemies();
 
+		this.viewport.getCamera().position.set(player.getX(),player.getY(),0f);
+
 
 	}
 
 	public void testLoadEnemies(){
 
-		Texture texture = new Texture("textures/operator_atlas.png");
-		List<TextureRegion> listsRegion = BaseActor.prepareRegion(texture,256,256);
+		Texture texture = new Texture("textures/zombie01/run/zombie01_run.png");
+		List<TextureRegion> listsRegion = BaseActor.prepareRegion(texture,512,512);
 
-		for(int i=0;i<16;i++) {
+		for(int i=0;i<10;i++) {
 			Random random = new Random();
 			int massAdd = random.nextInt(10);
 			int speedAdd = random.nextInt(8);
 
 			Monster monster = new Monster(texture, listsRegion, "monster",75 + massAdd);
-			monster.setPosition(128 + (i * 64), 768);
+			monster.setPosition(128 + (i * 64), 2800);
 			enemyStage.addActor(monster);
-			monster.setDestination(3122,1700);
+			monster.setDestination(512,128);
 		}
 
 	}
@@ -214,7 +217,7 @@ public class MainGdxClass extends Game implements InputProcessor{
 
 	private void loadTiledMap(Stage stage) {
 		tmxMapLoader = new TmxMapLoader();
-		TiledMap tiledMap = tmxMapLoader.load("maps/map01.tmx");
+		TiledMap tiledMap = tmxMapLoader.load("maps/map02.tmx");
 		TiledMapTileLayer layer = (TiledMapTileLayer) tiledMap.getLayers().get(0);
 		renderMap = new MapRender(tiledMap,batch);
 
@@ -283,7 +286,7 @@ public class MainGdxClass extends Game implements InputProcessor{
 		LightManagerSingleton.getInstance().rayHandler.setCombinedMatrix((OrthographicCamera) viewport.getCamera());
 		LightManagerSingleton.getInstance().rayHandler.updateAndRender();
 
-		debugRenderer.render(WorldManager.getInstance().world,viewport.getCamera().combined);
+		//debugRenderer.render(WorldManager.getInstance().world,viewport.getCamera().combined);
 
 		//angleLight+=delta * 128f;
 		//coneLight.setDirection(angleLight);

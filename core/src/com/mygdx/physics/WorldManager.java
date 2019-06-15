@@ -5,6 +5,7 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.mygdx.enemies.Monster;
 import com.mygdx.enemies.MonsterBase;
+import com.mygdx.lights.BDLIGHT;
 
 public class WorldManager implements ContactListener{
     private static WorldManager ourInstance = new WorldManager();
@@ -54,6 +55,9 @@ public class WorldManager implements ContactListener{
         fixtureDef.density = 1f;
         fixtureDef.friction = 0.0f;
         fixtureDef.shape = polygonShape;
+
+        fixtureDef.filter.categoryBits = BDLIGHT.CATEGORY_SQUARE_OBJECTIVE; // Value listed below
+        fixtureDef.filter.maskBits = BDLIGHT.MASK_SQUARE; // Value listed below
 
 
 

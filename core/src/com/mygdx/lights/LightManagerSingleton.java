@@ -8,6 +8,7 @@ import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.mygdx.physics.WorldManager;
 
@@ -30,6 +31,7 @@ public class LightManagerSingleton {
         rayHandler.setBlur(true);
         rayHandler.setBlurNum(4);
         rayHandler.setAmbientLight(0.005f);
+
     }
 
     public void loadLightsLayer(MapLayer lightLayer,Stage stage){
@@ -86,7 +88,14 @@ public class LightManagerSingleton {
     }
 
     public ConeLight addNativeConeLight(float x, float y, int distance,float coneDegre, float coneDirection, Color color){
-        return new ConeLight(this.rayHandler, MAX_RAY, color, distance,x, y, coneDirection, coneDegre);
+        ConeLight coneLight = new  ConeLight(this.rayHandler, MAX_RAY, color, distance,x, y, coneDirection, coneDegre);
+
+        Filter filter = new Filter();
+        filter.categoryBits = BDLIGHT.CATEGORY_LIGHT; // Value listed below
+        filter.maskBits = BDLIGHT.MASK_LIGHT;         // Value listed below
+        coneLight.setContactFilter(filter);
+
+        return coneLight;
     }
     public PointLight addNativePointLight(float x, float y, int distance, Color color){
         return new PointLight(this.rayHandler,MAX_RAY,color,distance,x,y);

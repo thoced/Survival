@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveByAction;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.badlogic.gdx.scenes.scene2d.actions.RotateToAction;
@@ -32,6 +33,16 @@ public class Monster extends MonsterBase {
         this.mass = mass;
         this.speed = speed;
 
+        this.setBounds(0,0,512,512);
+        sprite.setBounds(0,0,512,512);
+        this.setOrigin(256,256);
+        this.setTouchable(Touchable.enabled);
+
+        // scale du sprite
+        this.sprite.setScale(0.18f);
+        // application d'une couleur plus sombre
+        this.sprite.setColor(0.7f,0.6f,0.6f,1f);
+
         // body
         body = WorldManager.getInstance().createMonsterBody(this);
     }
@@ -41,7 +52,7 @@ public class Monster extends MonsterBase {
         super.draw(batch, parentAlpha);
         sprite.setOrigin(this.getOriginX(),this.getOriginY());
         sprite.setRegion(regions.get((int)indRegion));
-        sprite.draw(batch);
+               sprite.draw(batch);
     }
 
 
@@ -55,6 +66,11 @@ public class Monster extends MonsterBase {
         sprite.setRotation(this.getRotation());
 
 
+            // indice animation
+            indRegion += delta * 24 * 1.2f;
+            if(indRegion > 23)
+                indRegion = 0;
+
             // on récupère une nouvelle action
             if(!queueAction.isEmpty() && !onAction){
                 onAction = true;
@@ -66,17 +82,30 @@ public class Monster extends MonsterBase {
                 Vector2 dir = moveToAction.pos.cpy();
                 dir = dir.sub(body.getPosition().x, body.getPosition().y);
                 dir.nor();
+
+                // détermination de l'angle de rotation
+                float angle = dir.angle();
+                // création de la rotation avec lerp
+                RotateToAction rotateToAction = new RotateToAction();
+                rotateToAction.setRotation(angle);
+                rotateToAction.setUseShortestDirection(true);
+                rotateToAction.setDuration(0.25f);
+                this.addAction(rotateToAction);
+
+                // applicatoin de la force de déplacement
                 body.setLinearVelocity(dir.x * (speed + moveToAction.deltaSpeed), dir.y * (speed + moveToAction.deltaSpeed));
 
                 if(body.getPosition().dst(moveToAction.pos) < 8)
                     onAction =  false;
+
+                if(timeOut > 1.5f){
+                    moveToAction.pos.set(body.getPosition().x,body.getPosition().y);
+                    timeOut = 0f;
+                }
             }
 
             // timeout pour éviter les blocages, force le noeud testé à la position actuelle
-            if(timeOut > 1.5f){
-                moveToAction.pos.set(body.getPosition().x,body.getPosition().y);
-                timeOut = 0f;
-            }
+
 
 
 

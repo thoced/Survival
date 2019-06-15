@@ -19,7 +19,7 @@ public abstract class MonsterBase extends Actor {
 
     protected List<TextureRegion> regions;
 
-    protected int indRegion;
+    protected float indRegion;
 
     protected Queue<ActionMonster> queueAction = new Queue<ActionMonster>();
 

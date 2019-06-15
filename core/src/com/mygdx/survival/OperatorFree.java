@@ -166,6 +166,7 @@ public class OperatorFree extends OperatorPlayer {
     @Override
     public void setPosition(float x, float y) {
         super.setPosition(x, y);
+        body.setTransform(x,y,0f);
 
     }
 }
