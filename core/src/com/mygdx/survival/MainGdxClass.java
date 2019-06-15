@@ -206,7 +206,7 @@ public class MainGdxClass extends Game implements InputProcessor{
 			Monster monster = new Monster(texture, listsRegion, "monster",75 + massAdd);
 			monster.setPosition(128 + (i * 64), 768);
 			enemyStage.addActor(monster);
-			monster.setDestination(3122,2048);
+			monster.setDestination(3122,1700);
 		}
 
 	}

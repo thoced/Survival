@@ -14,9 +14,6 @@ public class NodeConnection implements Connection<NodeGraph> {
     public NodeConnection(NodeGraph fromNode, NodeGraph toNode) {
         this.fromNode = fromNode;
         this.toNode = toNode;
-
-
-
         this.cost = Vector2.dst(fromNode.x,fromNode.y,toNode.x,toNode.y);
     }
 

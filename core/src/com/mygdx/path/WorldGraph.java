@@ -70,14 +70,31 @@ public class WorldGraph implements IndexedGraph<NodeGraph> {
                     addNodeNeighbour(nodeGraphs[x][y], x, y - 1); // Node below
                     addNodeNeighbour(nodeGraphs[x][y], x, y + 1); // Node above
 
-                    addNodeNeighbour(nodeGraphs[x][y], x-1, y + 1); // haut gauche
-                    addNodeNeighbour(nodeGraphs[x][y], x+1, y + 1); // haut droite
-                    addNodeNeighbour(nodeGraphs[x][y], x-1, y - 1); // bas gauche
-                    addNodeNeighbour(nodeGraphs[x][y], x+1, y - 1); // bas gauche
+                    // ajout des connections en diagonales à condition qu'aucun obstacle ne soit à coté
+                    if(checkEdges(x-1,y) && checkEdges(x,y+1))
+                        addNodeNeighbour(nodeGraphs[x][y], x-1, y + 1); // haut gauche
+
+                    if(checkEdges(x+1,y) && checkEdges(x,y+1))
+                        addNodeNeighbour(nodeGraphs[x][y], x+1, y + 1); // haut droite
+
+                    if(checkEdges(x-1,y) && checkEdges(x,y-1))
+                     addNodeNeighbour(nodeGraphs[x][y], x-1, y - 1); // bas gauche
+
+                    if(checkEdges(x+1,y) && checkEdges(x,y-1))
+                        addNodeNeighbour(nodeGraphs[x][y], x+1, y - 1); // bas droite
 
                 }
             }
         }
+
+    }
+
+    private boolean checkEdges(int x, int y){
+        if(x < 0 || x > width - 1 || y < 0 || y > height - 1 || nodeGraphs[x][y] == null )
+            return false;
+        else
+            return true;
+
 
     }
 
