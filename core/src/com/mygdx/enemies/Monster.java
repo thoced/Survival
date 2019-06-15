@@ -72,8 +72,8 @@ public class Monster extends MonsterBase {
                     onAction =  false;
             }
 
-            // timeout pour éviter les blocages, relance une recherche de chemin
-            if(timeOut > 2f){
+            // timeout pour éviter les blocages, force le noeud testé à la position actuelle
+            if(timeOut > 1.5f){
                 moveToAction.pos.set(body.getPosition().x,body.getPosition().y);
                 timeOut = 0f;
             }
@@ -155,7 +155,6 @@ public class Monster extends MonsterBase {
         GraphPath<NodeGraph> paths = prepareDestination(x, y);
         if(paths == null)
             return;
-
 
 
     }

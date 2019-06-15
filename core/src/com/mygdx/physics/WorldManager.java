@@ -26,7 +26,7 @@ public class WorldManager implements ContactListener{
 
     public void addWalk(int x, int y){
         PolygonShape polygonShape = new PolygonShape();
-        polygonShape.setAsBox(32,32);
+        polygonShape.setAsBox(30,30);
 
       /*  Vector2[] vertices = new Vector2[8];
         vertices[0] = new Vector2(-32,18);
