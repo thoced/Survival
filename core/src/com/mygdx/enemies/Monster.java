@@ -54,7 +54,7 @@ public class Monster extends MonsterBase {
         super.draw(batch, parentAlpha);
         sprite.setOrigin(this.getOriginX(),this.getOriginY());
         sprite.setRegion(packRegions.get(nameAnimation).regions.get((int)indRegion));
-               sprite.draw(batch);
+        sprite.draw(batch);
     }
 
 
@@ -69,7 +69,7 @@ public class Monster extends MonsterBase {
 
 
             // indice animation
-            indRegion += delta * this.packRegions.get(nameAnimation).nbAnimation * 1.2f;
+            indRegion += delta * this.packRegions.get(nameAnimation).nbAnimation  * 1.2f;
             if(indRegion > this.packRegions.get(nameAnimation).nbAnimation - 1)
                 indRegion = 0;
 
@@ -79,6 +79,8 @@ public class Monster extends MonsterBase {
                 moveToAction = queueAction.removeFirst();
                 timeOut = 0f;
             }
+            else
+                nameAnimation = "IDLE";
 
             if(moveToAction != null) {
                 Vector2 dir = moveToAction.pos.cpy();
@@ -107,9 +109,6 @@ public class Monster extends MonsterBase {
             }
 
             // timeout pour éviter les blocages, force le noeud testé à la position actuelle
-
-
-
 
 
 

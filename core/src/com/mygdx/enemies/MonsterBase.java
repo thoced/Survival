@@ -21,7 +21,7 @@ public abstract class MonsterBase extends Actor {
 
    // protected List<TextureRegion> regions;
 
-    protected String nameAnimation = "IDLE";
+    protected String nameAnimation = "RUN";
 
     protected HashMap<String,TextureAnimated> packRegions;
 
