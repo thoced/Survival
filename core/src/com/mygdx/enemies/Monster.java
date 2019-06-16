@@ -16,7 +16,9 @@ import com.mygdx.path.WorldGraph;
 import com.mygdx.physics.WorldManager;
 import com.mygdx.survival.BaseActor;
 import com.mygdx.survival.PlayerSingleton;
+import com.mygdx.survival.TextureAnimated;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -26,10 +28,10 @@ public class Monster extends MonsterBase {
     private ActionMonster moveToAction;
     private float timeOut = 0f;
 
-    public Monster(Texture texture, List<TextureRegion> regions, String name, float mass) {
+    public Monster(HashMap<String, TextureAnimated> mapAnimation, String name, float mass) {
         this.setName(name);
-        this.sprite = new Sprite(texture);
-        this.regions = regions;
+        this.sprite = new Sprite(mapAnimation.get("RUN").texture);
+        this.packRegions = mapAnimation;
         this.mass = mass;
         this.speed = speed;
 
@@ -51,7 +53,7 @@ public class Monster extends MonsterBase {
     public void draw(Batch batch, float parentAlpha) {
         super.draw(batch, parentAlpha);
         sprite.setOrigin(this.getOriginX(),this.getOriginY());
-        sprite.setRegion(regions.get((int)indRegion));
+        sprite.setRegion(packRegions.get(nameAnimation).regions.get((int)indRegion));
                sprite.draw(batch);
     }
 
@@ -67,8 +69,8 @@ public class Monster extends MonsterBase {
 
 
             // indice animation
-            indRegion += delta * 24 * 1.2f;
-            if(indRegion > 23)
+            indRegion += delta * this.packRegions.get(nameAnimation).nbAnimation * 1.2f;
+            if(indRegion > this.packRegions.get(nameAnimation).nbAnimation - 1)
                 indRegion = 0;
 
             // on récupère une nouvelle action

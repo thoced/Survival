@@ -8,7 +8,9 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveByAction;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.badlogic.gdx.utils.Queue;
+import com.mygdx.survival.TextureAnimated;
 
+import java.util.HashMap;
 import java.util.List;
 
 public abstract class MonsterBase extends Actor {
@@ -17,7 +19,11 @@ public abstract class MonsterBase extends Actor {
 
     protected Sprite sprite;
 
-    protected List<TextureRegion> regions;
+   // protected List<TextureRegion> regions;
+
+    protected String nameAnimation = "IDLE";
+
+    protected HashMap<String,TextureAnimated> packRegions;
 
     protected float indRegion;
 

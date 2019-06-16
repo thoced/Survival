@@ -26,6 +26,7 @@ import com.mygdx.path.WorldGraph;
 import com.mygdx.physics.WorldManager;
 import com.mygdx.stages.EntityStage;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -198,15 +199,25 @@ public class MainGdxClass extends Game implements InputProcessor{
 
 	public void testLoadEnemies(){
 
-		Texture texture = new Texture("textures/zombie01/run/zombie01_run.png");
-		List<TextureRegion> listsRegion = BaseActor.prepareRegion(texture,512,512);
+		// creatoin du hashmap des animations
+		HashMap<String,TextureAnimated> mapRegionsAnimation = new HashMap<String,TextureAnimated>();
+
+		// creation animation RUN
+		TextureAnimated textureAnimatedRun = new TextureAnimated("textures/zombie01/run/zombie01_run.png","RUN",512,512);
+		mapRegionsAnimation.put("RUN",textureAnimatedRun);
+
+		// creation animation IDLE
+		TextureAnimated textureAnimatedIdle = new TextureAnimated("textures/zombie01/idle/zombie01_idle.png","IDLE",512,512);
+		mapRegionsAnimation.put("IDLE",textureAnimatedIdle);
+
+
 
 		for(int i=0;i<10;i++) {
 			Random random = new Random();
 			int massAdd = random.nextInt(10);
 			int speedAdd = random.nextInt(8);
 
-			Monster monster = new Monster(texture, listsRegion, "monster",75 + massAdd);
+			Monster monster = new Monster(mapRegionsAnimation, "monster",75 + massAdd);
 			monster.setPosition(128 + (i * 64), 2800);
 			enemyStage.addActor(monster);
 			monster.setDestination(512,128);
