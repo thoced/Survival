@@ -79,8 +79,6 @@ public class Monster extends MonsterBase {
                 moveToAction = queueAction.removeFirst();
                 timeOut = 0f;
             }
-            else
-                nameAnimation = "IDLE";
 
             if(moveToAction != null) {
                 Vector2 dir = moveToAction.pos.cpy();
@@ -167,7 +165,7 @@ public class Monster extends MonsterBase {
         for(int i=1;i<paths.getCount();i++){
             float deltaX = (float) (rangeMin + (rangeMax - rangeMin) * rx.nextDouble());
             float deltaY = (float) (rangeMin + (rangeMax - rangeMin) * ry.nextDouble());
-            float deltaSpeed = 0f;//rx.nextInt(16);
+            float deltaSpeed = rx.nextInt(16);
             ActionMonster action = new ActionMonster(new Vector2((paths.get(i).x * 64) + 32 + deltaX,(paths.get(i).y * 64) + 32 + deltaY),deltaSpeed);
             queueAction.addLast(action);
 
